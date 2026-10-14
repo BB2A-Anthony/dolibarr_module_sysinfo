@@ -40,3 +40,10 @@ MyPageName = My page name
 #
 MyWidget = My widget
 MyWidgetDescription = My widget description
+
+## Agent integration
+AddMachine = Add a machine (agent)
+SysinfoSoftwares = Software to monitor
+SearchPatternHelp = Regular expression searched into installed software names, e.g. /office/i. When empty, ref and label are used.
+SysinfoAgentSetup = Agent settings
+SysinfoAgentSetupPage = Agent settings page
