@@ -1,0 +1,42 @@
+# Translation file
+
+#
+# Generic
+#
+
+# Module label 'ModuleSysinfoName'
+ModuleSysinfoName = Sysinfo
+# Module description 'ModuleSysinfoDesc'
+ModuleSysinfoDesc = Sysinfo description
+
+#
+# Admin page
+#
+SysinfoSetup = Sysinfo setup
+Settings = Settings
+SysinfoSetupPage = Sysinfo setup page
+NewSection=New section
+SYSINFO_MYPARAM1 = My param 1
+SYSINFO_MYPARAM1Tooltip = My param 1 tooltip
+SYSINFO_MYPARAM2=My param 2
+SYSINFO_MYPARAM2Tooltip=My param 2 tooltip
+
+
+#
+# About page
+#
+About = About
+SysinfoAbout = About Sysinfo
+SysinfoAboutPage = Sysinfo about page
+
+#
+# Sample page
+#
+SysinfoArea = Home Sysinfo
+MyPageName = My page name
+
+#
+# Sample widget
+#
+MyWidget = My widget
+MyWidgetDescription = My widget description
