@@ -55,3 +55,7 @@ Un hook affiche automatiquement un bloc « Informations systeme (agent Windows) 
 ## Stockage
 
 **Une seule ligne par machine** dans la table `llx_sysinfo_reports` : à chaque envoi (30 s après le démarrage puis toutes les 4 h), le module met à jour l'enregistrement existant de la machine (`guid`) — `fk_soc`, hostname, OS, rapport JSON et date — ou le crée s'il s'agit du premier rapport. La colonne `guid` est `UNIQUE` pour garantir l'unicité.
+
+## Utilisateur technique
+
+À l'activation du module, un utilisateur technique `sysinfoagent` est créé (mot de passe aléatoire jamais stocké, clé API générée automatiquement) et ajouté au groupe Dolibarr **Technical users** (créé s'il n'existe pas). C'est la clé API de cet utilisateur qui est remise à l'agent lors de l'enrôlement.

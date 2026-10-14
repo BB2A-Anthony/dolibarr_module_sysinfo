@@ -39,7 +39,12 @@ class modSysinfo extends DolibarrModules
 	 * @var string Technical user created by the module for the Windows agent.
 	 * Its password is random and never stored: the agent only uses its API key.
 	 */
-	const AGENT_LOGIN = 'useragent';
+	const AGENT_LOGIN = 'sysinfoagent';
+
+	/**
+	 * @var string Name of the Dolibarr user group holding technical users.
+	 */
+	const AGENT_GROUP_NAME = 'Technical users';
 	/**
 	 * Constructor. Define names, constants, directories, boxes, permissions
 	 *
@@ -640,9 +645,60 @@ class modSysinfo extends DolibarrModules
 			}
 		}
 		dol_syslog('sysinfo: technical user '.self::AGENT_LOGIN.' ready (api key generated)', LOG_INFO);
+		if ($this->_addAgentUserToGroup($tmpuser) < 0) {
+			return -1;
+		}
 		return 1;
 	}
 
+	/**
+	 * Add the technical agent user into the 'Technical users' group
+	 * (created if it does not exist yet).
+	 *
+	 * @param  User $tmpuser Technical user
+	 * @return int 1 if OK, < 0 if KO
+	 */
+	private function _addAgentUserToGroup($tmpuser)
+	{
+		global $conf, $user;
+		require_once DOL_DOCUMENT_ROOT.'/user/class/usergroup.class.php';
+		$group = new UserGroup($this->db);
+		$groupId = 0;
+		$sqlg = "SELECT rowid FROM ".MAIN_DB_PREFIX."usergroup";
+		$sqlg .= " WHERE nom = '".$this->db->escape(self::AGENT_GROUP_NAME)."'";
+		$sqlg .= " AND entity = ".((int) $conf->entity);
+		$resql = $this->db->query($sqlg);
+		if ($resql) {
+			$objg = $this->db->fetch_object($resql);
+			if ($objg) {
+				$groupId = (int) $objg->rowid;
+			}
+		}
+		if (empty($groupId)) {
+			$group->name = self::AGENT_GROUP_NAME;
+			$group->nom = self::AGENT_GROUP_NAME;
+			$group->entity = $conf->entity;
+			$groupId = $group->create($user);
+			if ($groupId < 0) {
+				$this->error = $group->error;
+				return -1;
+			}
+		} else {
+			$group->fetch($groupId);
+		}
+		// Add the technical user into the group if not already a member.
+		$sqlu = "SELECT ug.fk_user FROM ".MAIN_DB_PREFIX."usergroup_user as ug";
+		$sqlu .= " WHERE ug.fk_user = ".((int) $tmpuser->id)." AND ug.fk_usergroup = ".((int) $groupId);
+		$resqlu = $this->db->query($sqlu);
+		if ($resqlu && $this->db->num_rows($resqlu) == 0) {
+			if ($tmpuser->SetInGroup($groupId, $conf->entity) < 0) {
+				$this->error = $tmpuser->error;
+				return -1;
+			}
+		}
+		dol_syslog('sysinfo: technical user '.self::AGENT_LOGIN.' added into group '.self::AGENT_GROUP_NAME, LOG_INFO);
+		return 1;
+	}
 
 	/**
 	 *	Function called when module is disabled.

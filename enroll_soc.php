@@ -202,12 +202,13 @@ $db->query($sql);
 
 // --- Deliver the technical user's API key -----------------------------------
 
+$agentLogin = getDolGlobalString('SYSINFO_AGENT_LOGIN') ? getDolGlobalString('SYSINFO_AGENT_LOGIN') : 'sysinfoagent';
 $agentUser = new User($db);
-if ($agentUser->fetch('', 'useragent') <= 0) {
-	enroll_fail(500, 'Utilisateur technique useragent introuvable');
+if ($agentUser->fetch('', $agentLogin) <= 0) {
+	enroll_fail(500, 'Utilisateur technique ' . $agentLogin . ' introuvable');
 }
 if (empty($agentUser->api_key)) {
-	enroll_fail(500, 'Aucune cle API pour useragent');
+	enroll_fail(500, 'Aucune cle API pour ' . $agentLogin);
 }
 
 // Return human-readable thirdparty details for the agent confirmation message.

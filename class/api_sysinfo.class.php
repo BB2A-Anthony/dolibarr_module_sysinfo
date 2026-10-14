@@ -40,7 +40,7 @@ class Sysinfo extends DolibarrApi
 		$this->_checkHttps();
 
 		// The agent posts reports: require the module write permission
-		// (granted to the technical 'useragent' at module activation).
+		// (granted to the technical 'sysinfoagent' user at module activation).
 		if (empty($user) || !$user->hasRight('sysinfo', 'write')) {
 			throw new RestException(
 				403,
