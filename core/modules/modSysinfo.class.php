@@ -36,6 +36,16 @@ require_once DOL_DOCUMENT_ROOT . '/core/lib/functions.lib.php';
 class modSysinfo extends DolibarrModules
 {
 	/**
+	 * @var string Technical user created by the module for the Windows agent.
+	 * Its password is random and never stored: the agent only uses its API key.
+	 */
+	const AGENT_LOGIN = 'sysinfoagent';
+
+	/**
+	 * @var string Name of the Dolibarr user group holding technical users.
+	 */
+	const AGENT_GROUP_NAME = 'Technical users';
+	/**
 	 * Constructor. Define names, constants, directories, boxes, permissions
 	 *
 	 * @param DoliDB $db Database handler
@@ -110,6 +120,8 @@ class modSysinfo extends DolibarrModules
 		$this->module_parts = array(
 			// Set this to 1 if module has its own trigger directory (core/triggers)
 			'triggers' => 0,
+			// API provided by the module (class/api_sysinfo.class.php)
+			'api' => array('sysinfo'),
 			// Set this to 1 if module has its own login method file (core/login)
 			'login' => 0,
 			// Set this to 1 if module has its own substitution function file (core/substitutions)
@@ -137,8 +149,7 @@ class modSysinfo extends DolibarrModules
 			// Set here all hooks context managed by module. To find available hook context, make a "grep -r '>initHooks(' *" on source code. You can also set hook context to 'all'
 			/* BEGIN MODULEBUILDER HOOKSCONTEXTS */
 			'hooks' => array(
-				// 'hookcontext1',
-				// 'hookcontext2',
+				'thirdpartycard',
 			),
 			/* END MODULEBUILDER HOOKSCONTEXTS */
 			// Set this to 1 if features of module are opened to external users
@@ -154,7 +165,7 @@ class modSysinfo extends DolibarrModules
 		$this->dirs = array("/sysinfo/temp");
 
 		// Config pages. Put here list of php page, stored into sysinfo/admin directory, to use to setup module.
-		$this->config_page_url = array("setup.php@sysinfo");
+		$this->config_page_url = array("setup.php@sysinfo", "agent.php@sysinfo");
 
 		// Dependencies
 		// A condition to hide module
@@ -175,6 +186,14 @@ class modSysinfo extends DolibarrModules
 		$this->need_dolibarr_version = array(19, -3); // Minimum version of Dolibarr required by module
 		// $this->max_dolibarr_version = array(19, -3); // Maximum version of Dolibarr required by module
 		$this->need_javascript_ajax = 0;
+
+		// Latest version of each agent and its update folder on GitHub releases
+		$this->agentWindowsVersion = '1.0.0';
+		$this->agentWindowsUpdateUrl = 'https://github.com/BB2A-Anthony/dolibarr_sysinfo_agent_windows/releases/download/1.0.0/update/';
+		$this->agentLinuxVersion = '1.0.0';
+		$this->agentLinuxUpdateUrl = 'https://github.com/BB2A-Anthony/dolibarr_sysinfo_agent_linux/releases/download/1.0.0/update/';
+		$this->agentAndroidVersion = '1.0.0';
+		$this->agentAndroidUpdateUrl = 'https://github.com/BB2A-Anthony/dolibarr_sysinfo_agent_android/releases/download/1.0.0/update/';
 
 		// Messages at activation
 		$this->warnings_activation = array(); 		// Warning to show when we activate a module. Example: array('always'='text') or array('FR'='textfr','MX'='textmx'...)
@@ -204,6 +223,8 @@ class modSysinfo extends DolibarrModules
 		/* BEGIN MODULEBUILDER TABS */
 		// Don't forget to deactivate/reactivate your module to test your changes
 		$this->tabs = array();
+		// 'Add machine' tab on the thirdparty card, visible only with the module 'enroll' permission.
+		$this->tabs[] = array('data' => 'thirdparty:+agent:AddMachine:@sysinfo:$user->hasRight(\'sysinfo\', \'enroll\'):/sysinfo/enroll_card.php?socid=__ID__');
 		/* END MODULEBUILDER TABS */
 		// Example:
 		// To add a new tab identified by code tabname1
@@ -263,7 +284,19 @@ class modSysinfo extends DolibarrModules
 		 );
 		 */
 		/* BEGIN MODULEBUILDER DICTIONARIES */
-		$this->dictionaries = array();
+		$this->dictionaries = array(
+			'langs' => 'sysinfo@sysinfo',
+			'tabname' => array(MAIN_DB_PREFIX."sysinfo_softwares"),
+			'tablib' => array("SysinfoSoftwares"),
+			'tabsql' => array('SELECT f.rowid as rowid, f.ref, f.label, f.pattern, f.active FROM '.MAIN_DB_PREFIX.'sysinfo_softwares as f'),
+			'tabsqlsort' => array("label ASC"),
+			'tabfield' => array("ref,label,pattern,active"),
+			'tabfieldvalue' => array("ref,label,pattern,active"),
+			'tabfieldinsert' => array("ref,label,pattern,active"),
+			'tabrowid' => array("rowid"),
+			'tabcond' => array(isModEnabled('sysinfo')),
+			'tabhelp' => array(array('pattern' => 'SearchPatternHelp')),
+		);
 		/* END MODULEBUILDER DICTIONARIES */
 
 		// Boxes/Widgets
@@ -307,6 +340,25 @@ class modSysinfo extends DolibarrModules
 		// Permissions provided by this module
 		$this->rights = array();
 		$r = 0;
+		// Permissions to read machine reports, enroll machines and write agent reports
+		$r++;
+		$this->rights[$r][0] = $this->numero + 1; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'Read machine system information';
+		$this->rights[$r][3] = 0;
+		$this->rights[$r][4] = 'read';
+		$this->rights[$r][5] = '';
+		$r++;
+		$this->rights[$r][0] = $this->numero + 2; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'Enroll a machine (generate enrollment code)';
+		$this->rights[$r][3] = 0;
+		$this->rights[$r][4] = 'enroll';
+		$this->rights[$r][5] = '';
+		$r++;
+		$this->rights[$r][0] = $this->numero + 3; // Permission id (must not be already used)
+		$this->rights[$r][1] = 'Write machine system information (agent)';
+		$this->rights[$r][3] = 0;
+		$this->rights[$r][4] = 'write';
+		$this->rights[$r][5] = '';
 		// Add here entries to declare new permissions
 		/* BEGIN MODULEBUILDER PERMISSIONS */
 		/*
@@ -536,8 +588,124 @@ class modSysinfo extends DolibarrModules
 				));
 			}
 		}
+		if ($this->_createAgentUser() < 0) {
+			return 0;
+		}
 
 		return $this->_init($sql, $options);
+	}
+
+	/**
+	 * Create the technical user used by the Windows agent to post its reports.
+	 * Its password is random and never stored: the agent only uses its API key.
+	 *
+	 * @return int 1 if OK, 0 if nothing to do, < 0 if KO
+	 */
+	private function _createAgentUser()
+	{
+		global $conf, $user;
+		require_once DOL_DOCUMENT_ROOT.'/user/class/user.class.php';
+		$tmpuser = new User($this->db);
+		$result = $tmpuser->fetch('', self::AGENT_LOGIN);
+		$apikey = '';
+		if ($result > 0 && !empty($tmpuser->api_key)) {
+			$apikey = $tmpuser->api_key;
+		} else {
+			$apikey = dol_trunc(uniqid('', true).uniqid('', true), 40, 'right', 'UTF-8', false);
+		}
+		if ($result > 0) {
+			// User exists: only (re)set the API key, never touch the password.
+			$tmpuser->api_key = $apikey;
+			if ($tmpuser->update($tmpuser->id, $user, 0, 0, 1) < 0) {
+				$this->error = $tmpuser->error;
+				return -1;
+			}
+		} else {
+			// Random one-time password: only used to satisfy Dolibarr's password
+			// policy at creation, discarded right after, never stored.
+			$randomPassword = dol_get_random(4, 4).strtoupper(dol_get_random(2, 2)).dol_get_random(2, 2).'!'.dol_get_random(2, 2).'#';
+			$tmpuser->login = self::AGENT_LOGIN;
+			$tmpuser->lastname = 'Agent';
+			$tmpuser->firstname = 'Sysinfo';
+			$tmpuser->pass = $randomPassword;
+			$tmpuser->api_key = $apikey;
+			$tmpuser->admin = 0;
+			$tmpuser->entity = 0;
+			$tmpuser->email = '';
+			if ($tmpuser->create($user, 0) < 0) {
+				$this->error = $tmpuser->error;
+				return -1;
+			}
+			$randomPassword = '';
+			unset($randomPassword);
+		}
+		dolibarr_set_const($this->db, 'SYSINFO_AGENT_LOGIN', self::AGENT_LOGIN, 'chaine', 0, '', $conf->entity);
+		// Grant read + write rights to the technical user so it can post
+		// reports through the API (Dolibarr checks module rights per user).
+		foreach (array($this->numero + 1, $this->numero + 3) as $rightId) {
+			$sqlr = "SELECT rowid FROM ".MAIN_DB_PREFIX."user_rights";
+			$sqlr .= " WHERE fk_user = ".((int) $tmpuser->id)." AND fk_id = ".((int) $rightId);
+			$resql = $this->db->query($sqlr);
+			if ($resql && $this->db->num_rows($resql) == 0) {
+				$sqlr = "INSERT INTO ".MAIN_DB_PREFIX."user_rights (fk_user, fk_id)";
+				$sqlr .= " VALUES (".((int) $tmpuser->id).", ".((int) $rightId).")";
+				$this->db->query($sqlr);
+			}
+		}
+		dol_syslog('sysinfo: technical user '.self::AGENT_LOGIN.' ready (api key generated)', LOG_INFO);
+		if ($this->_addAgentUserToGroup($tmpuser) < 0) {
+			return -1;
+		}
+		return 1;
+	}
+
+	/**
+	 * Add the technical agent user into the 'Technical users' group
+	 * (created if it does not exist yet).
+	 *
+	 * @param  User $tmpuser Technical user
+	 * @return int 1 if OK, < 0 if KO
+	 */
+	private function _addAgentUserToGroup($tmpuser)
+	{
+		global $conf, $user;
+		require_once DOL_DOCUMENT_ROOT.'/user/class/usergroup.class.php';
+		$group = new UserGroup($this->db);
+		$groupId = 0;
+		$sqlg = "SELECT rowid FROM ".MAIN_DB_PREFIX."usergroup";
+		$sqlg .= " WHERE nom = '".$this->db->escape(self::AGENT_GROUP_NAME)."'";
+		$sqlg .= " AND entity = ".((int) $conf->entity);
+		$resql = $this->db->query($sqlg);
+		if ($resql) {
+			$objg = $this->db->fetch_object($resql);
+			if ($objg) {
+				$groupId = (int) $objg->rowid;
+			}
+		}
+		if (empty($groupId)) {
+			$group->name = self::AGENT_GROUP_NAME;
+			$group->nom = self::AGENT_GROUP_NAME;
+			$group->entity = $conf->entity;
+			$groupId = $group->create($user);
+			if ($groupId < 0) {
+				$this->error = $group->error;
+				return -1;
+			}
+		} else {
+			$group->fetch($groupId);
+		}
+		// Add the technical user into the group if not already a member.
+		$sqlu = "SELECT ug.fk_user FROM ".MAIN_DB_PREFIX."usergroup_user as ug";
+		$sqlu .= " WHERE ug.fk_user = ".((int) $tmpuser->id)." AND ug.fk_usergroup = ".((int) $groupId);
+		$resqlu = $this->db->query($sqlu);
+		if ($resqlu && $this->db->num_rows($resqlu) == 0) {
+			if ($tmpuser->SetInGroup($groupId, $conf->entity) < 0) {
+				$this->error = $tmpuser->error;
+				return -1;
+			}
+		}
+		dol_syslog('sysinfo: technical user '.self::AGENT_LOGIN.' added into group '.self::AGENT_GROUP_NAME, LOG_INFO);
+		return 1;
 	}
 
 	/**
