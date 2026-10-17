@@ -7,7 +7,7 @@
 # Module label 'ModuleSysinfoName'
 ModuleSysinfoName = Sysinfo
 # Module description 'ModuleSysinfoDesc'
-ModuleSysinfoDesc = Sysinfo description
+ModuleSysinfoDesc = Sysinfo inventory of machines and installed softwares reported by agents, including the dictionary of softwares to monitor
 
 #
 # Admin page
