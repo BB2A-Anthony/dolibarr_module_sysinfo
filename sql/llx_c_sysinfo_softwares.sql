@@ -1,5 +1,5 @@
 -- Dictionary of software to track on agent machines.
-CREATE TABLE llx_sysinfo_softwares (
+CREATE TABLE llx_c_sysinfo_softwares (
     rowid    integer AUTO_INCREMENT PRIMARY KEY,
     ref      varchar(128) NOT NULL,
     label    varchar(255) NOT NULL,
