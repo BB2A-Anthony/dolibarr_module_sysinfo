@@ -5,10 +5,12 @@
 * POST /api/index.php/sysinfo/machine        -> store a report
 * GET  /api/index.php/sysinfo/machine        -> latest report per machine
 * GET  /api/index.php/sysinfo/machine/{id}   -> latest report of one machine
+* GET  /api/index.php/sysinfo/config         -> agent versions and update urls
 */
 require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
 require_once __DIR__ . '/sysinfo_report.class.php';
 require_once __DIR__ . '/sysinfo_software.class.php';
+require_once __DIR__ . '/../core/modules/modSysinfo.class.php';
 
 class Sysinfo extends DolibarrApi
 {
@@ -239,6 +241,29 @@ class Sysinfo extends DolibarrApi
 			'date_creation' => $report->date_creation,
 		);
 		return $this->_formatRow($row);
+	}
+
+	/**
+	* Get agent versions and update urls (module descriptor, overridable
+	* via the SYSINFO_AGENT_* constants).
+	*
+	* GET /api/index.php/sysinfo/config
+	*
+	* @return array
+	*/
+	public function getConfig()
+	{
+		$module = new modSysinfo($this->db);
+		$out = array();
+		foreach (array('Windows', 'Linux', 'Android') as $os) {
+			$versionKey = 'agent' . $os . 'Version';
+			$urlKey = 'agent' . $os . 'UpdateUrl';
+			$out[strtolower($os)] = array(
+				'version' => getDolGlobalString('SYSINFO_AGENT_' . dol_strtoupper($os) . '_VERSION') ?: $module->$versionKey,
+				'update_url' => getDolGlobalString('SYSINFO_AGENT_' . dol_strtoupper($os) . '_UPDATE_URL') ?: $module->$urlKey,
+			);
+		}
+		return $out;
 	}
 
 	/**

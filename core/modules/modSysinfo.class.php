@@ -187,6 +187,14 @@ class modSysinfo extends DolibarrModules
 		// $this->max_dolibarr_version = array(19, -3); // Maximum version of Dolibarr required by module
 		$this->need_javascript_ajax = 0;
 
+		// Latest version of each agent and its update folder on GitHub releases
+		$this->agentWindowsVersion = '1.0.0';
+		$this->agentWindowsUpdateUrl = 'https://github.com/BB2A-Anthony/dolibarr_sysinfo_agent_windows/releases/download/1.0.0/update/';
+		$this->agentLinuxVersion = '1.0.0';
+		$this->agentLinuxUpdateUrl = 'https://github.com/BB2A-Anthony/dolibarr_sysinfo_agent_linux/releases/download/1.0.0/update/';
+		$this->agentAndroidVersion = '1.0.0';
+		$this->agentAndroidUpdateUrl = 'https://github.com/BB2A-Anthony/dolibarr_sysinfo_agent_android/releases/download/1.0.0/update/';
+
 		// Messages at activation
 		$this->warnings_activation = array(); 		// Warning to show when we activate a module. Example: array('always'='text') or array('FR'='textfr','MX'='textmx'...)
 		$this->warnings_activation_ext = array(); 	// Warning to show when we activate a module if another module is on. Example: array('modOtherModule' => array('always'=>'text')) or array('always' => array('FR'=>'textfr','MX'=>'textmx'...))
