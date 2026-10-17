@@ -1,5 +1,5 @@
 <?php
-/* Copyright (C) 2026		Anthony BERTON				<a.berton@gest-mag.com>
+/* Copyright (C) 2026		Anthony BERTON				<anthony.berton@bb2a.fr>
  * Copyright (C) 2025       Frédéric France         <frederic.france@free.fr>
  *
  * This program is free software: you can redistribute it and/or modify

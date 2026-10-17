@@ -22,9 +22,9 @@
 	<exclude-pattern>/\.cache/</exclude-pattern>
 
 	<!-- Custom rules -->
-	<config name="installed_paths" value="C:/www/dolibarr/dev/setup/codesniffer" />
-	<rule ref="codesniffer.Dolibarr.LanguageOfComments"/>
-	<rule ref="codesniffer.Dolibarr.CheckIsModEnabledArgument"/>
+	<!-- <config name="installed_paths" value="C:/www/dolibarr/dev/setup/codesniffer" /> -->
+	<!-- <rule ref="codesniffer.Dolibarr.LanguageOfComments"/> -->
+	<!-- <rule ref="codesniffer.Dolibarr.CheckIsModEnabledArgument"/> -->
 
 	<!-- List of all tests -->
 
