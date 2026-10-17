@@ -5,10 +5,12 @@
 * POST /api/index.php/sysinfo/machine        -> store a report
 * GET  /api/index.php/sysinfo/machine        -> latest report per machine
 * GET  /api/index.php/sysinfo/machine/{id}   -> latest report of one machine
+* GET  /api/index.php/sysinfo/config         -> agent versions and update URLs
 */
 require_once DOL_DOCUMENT_ROOT . '/societe/class/societe.class.php';
 require_once __DIR__ . '/sysinfo_report.class.php';
 require_once __DIR__ . '/sysinfo_software.class.php';
+require_once __DIR__ . '/../core/modules/modSysinfo.class.php';
 
 class Sysinfo extends DolibarrApi
 {
@@ -24,6 +26,41 @@ class Sysinfo extends DolibarrApi
 	{
 		global $db;
 		$this->db = $db;
+	}
+
+	/**
+	* Return module agent configuration: latest agent versions and their
+	* update download URLs (from the module descriptor).
+	*
+	* GET /api/index.php/sysinfo/config
+	*
+	* @return array
+	* @throws RestException 403 Missing permission
+	*/
+	public function getConfig()
+	{
+		global $user;
+
+		$this->_checkHttps();
+
+		if (empty($user) || (!$user->hasRight('sysinfo', 'read') && !$user->hasRight('sysinfo', 'write'))) {
+			throw new RestException(
+				403,
+				'Permission sysinfo read ou write requise pour lire la configuration'
+			);
+		}
+
+		$mod = new modSysinfo($this->db);
+
+		return array(
+			'success' => true,
+			'agent_windows_version' => $mod->agentWindowsVersion,
+			'agent_windows_update_url' => $mod->agentWindowsUpdateUrl,
+			'agent_linux_version' => $mod->agentLinuxVersion,
+			'agent_linux_update_url' => $mod->agentLinuxUpdateUrl,
+			'agent_android_version' => $mod->agentAndroidVersion,
+			'agent_android_update_url' => $mod->agentAndroidUpdateUrl,
+		);
 	}
 
 	/**

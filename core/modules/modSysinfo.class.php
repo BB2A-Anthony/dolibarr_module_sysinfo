@@ -45,6 +45,36 @@ class modSysinfo extends DolibarrModules
 	 * @var string Name of the Dolibarr user group holding technical users.
 	 */
 	const AGENT_GROUP_NAME = 'Technical users';
+
+	/**
+	 * @var string Latest available version of the Windows agent.
+	 */
+	public $agentWindowsVersion = 'v1.0';
+
+	/**
+	 * @var string Download URL of the Windows agent update folder (GitHub tag /update).
+	 */
+	public $agentWindowsUpdateUrl = 'https://github.com/BB2A-Anthony/dolibarr_sysinfo_agent_windows/raw/v1.0/update/';
+
+	/**
+	 * @var string Latest available version of the Linux agent.
+	 */
+	public $agentLinuxVersion = 'v1.0';
+
+	/**
+	 * @var string Download URL of the Linux agent update folder (GitHub tag /update).
+	 */
+	public $agentLinuxUpdateUrl = 'https://github.com/BB2A-Anthony/dolibarr_sysinfo_agent_linux/raw/v1.0/update/';
+
+	/**
+	 * @var string Latest available version of the Android agent.
+	 */
+	public $agentAndroidVersion = 'v1.0';
+
+	/**
+	 * @var string Download URL of the Android agent update folder (GitHub tag /update).
+	 */
+	public $agentAndroidUpdateUrl = 'https://github.com/BB2A-Anthony/dolibarr_sysinfo_agent_android/raw/v1.0/update/';
 	/**
 	 * Constructor. Define names, constants, directories, boxes, permissions
 	 *
