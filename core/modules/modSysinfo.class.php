@@ -286,9 +286,9 @@ class modSysinfo extends DolibarrModules
 		/* BEGIN MODULEBUILDER DICTIONARIES */
 		$this->dictionaries = array(
 			'langs' => 'sysinfo@sysinfo',
-			'tabname' => array(MAIN_DB_PREFIX."sysinfo_softwares"),
+			'tabname' => array(MAIN_DB_PREFIX."c_sysinfo_softwares"),
 			'tablib' => array("SysinfoSoftwares"),
-			'tabsql' => array('SELECT f.rowid as rowid, f.ref, f.label, f.pattern, f.active FROM '.MAIN_DB_PREFIX.'sysinfo_softwares as f'),
+			'tabsql' => array('SELECT f.rowid as rowid, f.ref, f.label, f.pattern, f.active FROM '.MAIN_DB_PREFIX.'c_sysinfo_softwares as f'),
 			'tabsqlsort' => array("label ASC"),
 			'tabfield' => array("ref,label,pattern,active"),
 			'tabfieldvalue' => array("ref,label,pattern,active"),
