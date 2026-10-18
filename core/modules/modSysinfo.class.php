@@ -133,7 +133,7 @@ class modSysinfo extends DolibarrModules
 			// Set this to 1 if module has its own barcode directory (core/modules/barcode)
 			'barcode' => 0,
 			// Set this to 1 if module has its own models directory (core/modules/xxx)
-			'models' => 0,
+			'models' => 1,
 			// Set this to 1 if module has its own printing directory (core/modules/printing)
 			'printing' => 0,
 			// Set this to 1 if module has its own theme directory (theme)
@@ -228,7 +228,7 @@ class modSysinfo extends DolibarrModules
 		/* END MODULEBUILDER TABS */
 		// Example:
 		// To add a new tab identified by code tabname1
-		// $this->tabs[] = array('data' => 'objecttype:+tabname1:Title1:mylangfile@sysinfo:$user->hasRight('sysinfo', 'myobject', 'read'):/sysinfo/mynewtab1.php?id=__ID__');
+		// $this->tabs[] = array('data' => 'objecttype:+tabname1:Title1:mylangfile@sysinfo:$user->hasRight('sysinfo', 'sysinforeport', 'read'):/sysinfo/mynewtab1.php?id=__ID__');
 		// To add another new tab identified by code tabname2. Label will be result of calling all substitution functions on 'Title2' key.
 		// $this->tabs[] = array('data' => 'objecttype:+tabname2:SUBSTITUTION_Title2:mylangfile@sysinfo:$user->hasRight('othermodule', 'otherobject', 'read'):/sysinfo/mynewtab2.php?id=__ID__',
 		// To remove an existing tab identified by code tabname
@@ -319,8 +319,8 @@ class modSysinfo extends DolibarrModules
 			//  0 => array(
 			//      'label' => 'MyJob label',
 			//      'jobtype' => 'method',
-			//      'class' => '/sysinfo/class/myobject.class.php',
-			//      'objectname' => 'MyObject',
+			//      'class' => '/sysinfo/class/sysinforeport.class.php',
+			//      'objectname' => 'SysinfoReport',
 			//      'method' => 'doScheduledJob',
 			//      'parameters' => '',
 			//      'comment' => 'Comment',
@@ -361,24 +361,59 @@ class modSysinfo extends DolibarrModules
 		$this->rights[$r][5] = '';
 		// Add here entries to declare new permissions
 		/* BEGIN MODULEBUILDER PERMISSIONS */
-		/*
-		$o = 1;
-		$this->rights[$r][0] = $this->numero . sprintf("%02d", ($o * 10) + 1); // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Read objects of Sysinfo'; // Permission label
-		$this->rights[$r][4] = 'myobject';
-		$this->rights[$r][5] = 'read'; // In php code, permission will be checked by test if ($user->hasRight('sysinfo', 'myobject', 'read'))
+		$this->rights[$r][0] = $this->numero . sprintf('%02d', (0 * 10) + 1 + 1);
+		$this->rights[$r][1] = 'Enroll a machine (generate enrollment code)';
+		0;
+		$this->rights[$r][4] = 'enroll';
+		$this->rights[$r][5] = '';
 		$r++;
-		$this->rights[$r][0] = $this->numero . sprintf("%02d", ($o * 10) + 2); // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Create/Update objects of Sysinfo'; // Permission label
-		$this->rights[$r][4] = 'myobject';
-		$this->rights[$r][5] = 'write'; // In php code, permission will be checked by test if ($user->hasRight('sysinfo', 'myobject', 'write'))
+		$this->rights[$r][0] = $this->numero . sprintf('%02d', (0 * 10) + 2 + 1);
+		$this->rights[$r][1] = 'Enroll a machine (generate enrollment code)';
+		$this->rights[$r][4] = 'enroll';
+		$this->rights[$r][5] = '';
 		$r++;
-		$this->rights[$r][0] = $this->numero . sprintf("%02d", ($o * 10) + 3); // Permission id (must not be already used)
-		$this->rights[$r][1] = 'Delete objects of Sysinfo'; // Permission label
-		$this->rights[$r][4] = 'myobject';
-		$this->rights[$r][5] = 'delete'; // In php code, permission will be checked by test if ($user->hasRight('sysinfo', 'myobject', 'delete'))
+		$this->rights[$r][0] = $this->numero . sprintf('%02d', (0 * 10) + 3 + 1);
+		$this->rights[$r][1] = 'Enroll a machine (generate enrollment code)';
+		$this->rights[$r][4] = 'enroll';
+		$this->rights[$r][5] = '';
 		$r++;
-		*/
+		$this->rights[$r][0] = $this->numero . sprintf('%02d', (1 * 10) + 1 + 1);
+		$this->rights[$r][1] = 'Read machine system information';
+		0;
+		$this->rights[$r][4] = 'read';
+		$this->rights[$r][5] = '';
+		$r++;
+		$this->rights[$r][0] = $this->numero . sprintf('%02d', (1 * 10) + 2 + 1);
+		$this->rights[$r][1] = 'Read machine system information';
+		$this->rights[$r][4] = 'read';
+		$this->rights[$r][5] = '';
+		$r++;
+		$this->rights[$r][0] = $this->numero . sprintf('%02d', (2 * 10) + 1 + 1);
+		$this->rights[$r][1] = 'Write machine system information (agent)';
+		$this->rights[$r][4] = 'write';
+		$this->rights[$r][5] = '';
+		$r++;
+		$this->rights[$r][0] = $this->numero . sprintf('%02d', (3 * 10) + 0 + 1);
+		$this->rights[$r][1] = 'Read SysinfoReport object of Sysinfo';
+		$this->rights[$r][4] = 'sysinforeport';
+		$this->rights[$r][5] = 'read';
+		$r++;
+		$this->rights[$r][0] = $this->numero . sprintf('%02d', (3 * 10) + 1 + 1);
+		$this->rights[$r][1] = 'Create/Update SysinfoReport object of Sysinfo';
+		$this->rights[$r][4] = 'sysinforeport';
+		$this->rights[$r][5] = 'write';
+		$r++;
+		$this->rights[$r][0] = $this->numero . sprintf('%02d', (3 * 10) + 2 + 1);
+		$this->rights[$r][1] = 'Delete SysinfoReport object of Sysinfo';
+		$this->rights[$r][4] = 'sysinforeport';
+		$this->rights[$r][5] = 'delete';
+		$r++;
+		$this->rights[$r][0] = $this->numero . sprintf('%02d', (4 * 10) + 0 + 1);
+		$this->rights[$r][1] = 'Read Test object of Sysinfo';
+		$this->rights[$r][4] = 'test';
+		$this->rights[$r][5] = 'read';
+		$r++;
+
 		/* END MODULEBUILDER PERMISSIONS */
 
 
@@ -388,69 +423,121 @@ class modSysinfo extends DolibarrModules
 		// Add here entries to declare new menus
 		/* BEGIN MODULEBUILDER TOPMENU */
 		$this->menu[$r++] = array(
-			'fk_menu' => '', // Will be stored into mainmenu + leftmenu. Use '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
-			'type' => 'top', // This is a Top menu entry
-			'titre' => 'ModuleSysinfoName',
-			'prefix' => img_picto('', $this->picto, 'class="pictofixedwidth valignmiddle"'),
-			'mainmenu' => 'sysinfo',
-			'leftmenu' => '',
-			'url' => '/sysinfo/sysinfoindex.php',
-			'langs' => 'sysinfo@sysinfo', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
-			'position' => 1000 + $r,
-			'enabled' => "isModEnabled('sysinfo')", // Define condition to show or hide menu entry. Use "isModEnabled('sysinfo')" if entry must be visible if module is enabled (those quote marks are importants).
-			'perms' => '1', // Use 'perms'=>'$user->hasRight("sysinfo", "myobject", "read")' if you want your menu with a permission rules
-			'target' => '',
-			'user' => 2, // 0=Menu for internal users, 1=external users, 2=both
+			// 'fk_menu' => '', // Will be stored into mainmenu + leftmenu. Use '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			// 'type' => 'top', // This is a Top menu entry
+			// 'titre' => 'ModuleSysinfoName',
+			// 'prefix' => img_picto('', $this->picto, 'class="pictofixedwidth valignmiddle"'),
+			// 'mainmenu' => 'sysinfo',
+			// 'leftmenu' => '',
+			// 'url' => '/sysinfo/sysinfoindex.php',
+			// 'langs' => 'sysinfo@sysinfo', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
+			// 'position' => 1000 + $r,
+			// 'enabled' => "isModEnabled('sysinfo')", // Define condition to show or hide menu entry. Use "isModEnabled('sysinfo')" if entry must be visible if module is enabled (those quote marks are importants).
+			// 'perms' => '1', // Use 'perms'=>'$user->hasRight("sysinfo", "sysinforeport", "read")' if you want your menu with a permission rules
+			// 'target' => '',
+			// 'user' => 2, // 0=Menu for internal users, 1=external users, 2=both
 		);
 		/* END MODULEBUILDER TOPMENU */
+
+				/* BEGIN MODULEBUILDER LEFTMENU SYSINFOREPORT */
+		$this->menu[$r++] = array(
+			'fk_menu' => 'fk_mainmenu=sysinfo',
+			'type' => 'left',
+			'titre' => 'SysinfoReport',
+			'mainmenu' => 'sysinfo',
+			'leftmenu' => 'sysinforeport',
+			'url' => '/sysinfo/sysinforeport_list.php',
+			'langs' => 'sysinfo@sysinfo',
+			'position' => 1000,
+			'enabled' => 'isModEnabled(\'sysinfo\')',
+			'perms' => '$user->hasRight(\'sysinfo\', \'sysinforeport\', \'read\')',
+			'target' => '',
+			'user' => 2,
+			'object' => 'SysinfoReport',
+		);
+		/* END MODULEBUILDER LEFTMENU SYSINFOREPORT */
+		/* BEGIN MODULEBUILDER LEFTMENU SYSINFOREPORT */
+		$this->menu[$r++] = array(
+			'fk_menu' => 'fk_mainmenu=sysinfo,fk_leftmenu=sysinforeport',
+			'type' => 'left',
+			'titre' => 'List SysinfoReport',
+			'mainmenu' => 'sysinfo',
+			'leftmenu' => 'sysinfo_sysinforeport_list',
+			'url' => '/sysinfo/sysinforeport_list.php',
+			'langs' => 'sysinfo@sysinfo',
+			'position' => 1000,
+			'enabled' => 'isModEnabled(\'sysinfo\')',
+			'perms' => '$user->hasRight(\'sysinfo\', \'sysinforeport\', \'read\')',
+			'target' => '',
+			'user' => 2,
+			'object' => 'SysinfoReport',
+		);
+		/* END MODULEBUILDER LEFTMENU SYSINFOREPORT */
+		/* BEGIN MODULEBUILDER LEFTMENU SYSINFOREPORT */
+		$this->menu[$r++] = array(
+			'fk_menu' => 'fk_mainmenu=sysinfo,fk_leftmenu=sysinforeport',
+			'type' => 'left',
+			'titre' => 'New SysinfoReport',
+			'mainmenu' => 'sysinfo',
+			'leftmenu' => 'sysinfo_sysinforeport_new',
+			'url' => '/sysinfo/sysinforeport_card.php?action=create',
+			'langs' => 'sysinfo@sysinfo',
+			'position' => 1000,
+			'enabled' => 'isModEnabled(\'sysinfo\')',
+			'perms' => '$user->hasRight(\'sysinfo\', \'sysinforeport\', \'write\')',
+			'target' => '',
+			'user' => 2,
+			'object' => 'SysinfoReport',
+		);
+		/* END MODULEBUILDER LEFTMENU SYSINFOREPORT */
 
 		/* BEGIN MODULEBUILDER LEFTMENU MYOBJECT */
 		/*
 		$this->menu[$r++]=array(
 			'fk_menu' => 'fk_mainmenu=sysinfo',      // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type' => 'left',                          // This is a Left menu entry
-			'titre' => 'MyObject',
+			'titre' => 'SysinfoReport',
 			'prefix' => img_picto('', $this->picto, 'class="pictofixedwidth valignmiddle paddingright"'),
 			'mainmenu' => 'sysinfo',
-			'leftmenu' => 'myobject',
+			'leftmenu' => 'sysinforeport',
 			'url' => '/sysinfo/sysinfoindex.php',
 			'langs' => 'sysinfo@sysinfo',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position' => 1000 + $r,
 			'enabled' => "isModEnabled('sysinfo')", // Define condition to show or hide menu entry. Use isModEnabled("sysinfo") if entry must be visible if module is enabled.
-			'perms' => '$user->hasRight("sysinfo", "myobject", "read")',
+			'perms' => '$user->hasRight("sysinfo", "sysinforeport", "read")',
 			'target' => '',
 			'user' => 2,				                // 0=Menu for internal users, 1=external users, 2=both
-			'object' => 'MyObject'
+			'object' => 'SysinfoReport'
 		);
 		$this->menu[$r++]=array(
-			'fk_menu' => 'fk_mainmenu=sysinfo,fk_leftmenu=myobject',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu' => 'fk_mainmenu=sysinfo,fk_leftmenu=sysinforeport',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type' => 'left',			                // This is a Left menu entry
-			'titre' => 'New_MyObject',
+			'titre' => 'New_SysinfoReport',
 			'mainmenu' => 'sysinfo',
-			'leftmenu' => 'sysinfo_myobject_new',
-			'url' => '/sysinfo/myobject_card.php?action=create',
+			'leftmenu' => 'sysinfo_sysinforeport_new',
+			'url' => '/sysinfo/sysinforeport_card.php?action=create',
 			'langs' => 'sysinfo@sysinfo',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position' => 1000 + $r,
 			'enabled' => "isModEnabled('sysinfo')", // Define condition to show or hide menu entry. Use isModEnabled("sysinfo") if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
-			'perms' => '$user->hasRight("sysinfo", "myobject", "write")'
+			'perms' => '$user->hasRight("sysinfo", "sysinforeport", "write")'
 			'target' => '',
 			'user' => 2,				                // 0=Menu for internal users, 1=external users, 2=both
-			'object' => 'MyObject'
+			'object' => 'SysinfoReport'
 		);
 		$this->menu[$r++]=array(
-			'fk_menu' => 'fk_mainmenu=sysinfo,fk_leftmenu=myobject',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
+			'fk_menu' => 'fk_mainmenu=sysinfo,fk_leftmenu=sysinforeport',	    // '' if this is a top menu. For left menu, use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type' => 'left',			                // This is a Left menu entry
-			'titre' => 'List_MyObject',
+			'titre' => 'List_SysinfoReport',
 			'mainmenu' => 'sysinfo',
-			'leftmenu' => 'sysinfo_myobject_list',
-			'url' => '/sysinfo/myobject_list.php',
+			'leftmenu' => 'sysinfo_sysinforeport_list',
+			'url' => '/sysinfo/sysinforeport_list.php',
 			'langs' => 'sysinfo@sysinfo',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position' => 1000 + $r,
 			'enabled' => "isModEnabled('sysinfo')", // Define condition to show or hide menu entry. Use isModEnabled("sysinfo") if entry must be visible if module is enabled.
-			'perms' => '$user->hasRight("sysinfo", "myobject", "read")'
+			'perms' => '$user->hasRight("sysinfo", "sysinforeport", "read")'
 			'target' => '',
 			'user' => 2,				                // 0=Menu for internal users, 1=external users, 2=both
-			'object' => 'MyObject'
+			'object' => 'SysinfoReport'
 		);
 		*/
 		/* END MODULEBUILDER LEFTMENU MYOBJECT */
@@ -462,28 +549,28 @@ class modSysinfo extends DolibarrModules
 		/*
 		$langs->load("sysinfo@sysinfo");
 		$this->export_code[$r] = $this->rights_class.'_'.$r;
-		$this->export_label[$r] = 'MyObjectLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
+		$this->export_label[$r] = 'SysinfoReportLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
 		$this->export_icon[$r] = $this->picto;
 		// Define $this->export_fields_array, $this->export_TypeFields_array and $this->export_entities_array
-		$keyforclass = 'MyObject'; $keyforclassfile='/sysinfo/class/myobject.class.php'; $keyforelement='myobject@sysinfo';
+		$keyforclass = 'SysinfoReport'; $keyforclassfile='/sysinfo/class/sysinforeport.class.php'; $keyforelement='sysinforeport@sysinfo';
 		include DOL_DOCUMENT_ROOT.'/core/commonfieldsinexport.inc.php';
 		//$this->export_fields_array[$r]['t.fieldtoadd']='FieldToAdd'; $this->export_TypeFields_array[$r]['t.fieldtoadd']='Text';
 		//unset($this->export_fields_array[$r]['t.fieldtoremove']);
-		//$keyforclass = 'MyObjectLine'; $keyforclassfile='/sysinfo/class/myobject.class.php'; $keyforelement='myobjectline@sysinfo'; $keyforalias='tl';
+		//$keyforclass = 'SysinfoReportLine'; $keyforclassfile='/sysinfo/class/sysinforeport.class.php'; $keyforelement='sysinforeportline@sysinfo'; $keyforalias='tl';
 		//include DOL_DOCUMENT_ROOT.'/core/commonfieldsinexport.inc.php';
-		$keyforselect='myobject'; $keyforaliasextra='extra'; $keyforelement='myobject@sysinfo';
+		$keyforselect='sysinforeport'; $keyforaliasextra='extra'; $keyforelement='sysinforeport@sysinfo';
 		include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
-		//$keyforselect='myobjectline'; $keyforaliasextra='extraline'; $keyforelement='myobjectline@sysinfo';
+		//$keyforselect='sysinforeportline'; $keyforaliasextra='extraline'; $keyforelement='sysinforeportline@sysinfo';
 		//include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
-		//$this->export_dependencies_array[$r] = array('myobjectline' => array('tl.rowid','tl.ref')); // To force to activate one or several fields if we select some fields that need same (like to select a unique key if we ask a field of a child to avoid the DISTINCT to discard them, or for computed field than need several other fields)
+		//$this->export_dependencies_array[$r] = array('sysinforeportline' => array('tl.rowid','tl.ref')); // To force to activate one or several fields if we select some fields that need same (like to select a unique key if we ask a field of a child to avoid the DISTINCT to discard them, or for computed field than need several other fields)
 		//$this->export_special_array[$r] = array('t.field' => '...');
 		//$this->export_examplevalues_array[$r] = array('t.field' => 'Example');
 		//$this->export_help_array[$r] = array('t.field' => 'FieldDescHelp');
 		$this->export_sql_start[$r]='SELECT DISTINCT ';
-		$this->export_sql_end[$r]  =' FROM '.$this->db->prefix().'sysinfo_myobject as t';
-		//$this->export_sql_end[$r]  .=' LEFT JOIN '.$this->db->prefix().'sysinfo_myobject_line as tl ON tl.fk_myobject = t.rowid';
+		$this->export_sql_end[$r]  =' FROM '.$this->db->prefix().'sysinfo_sysinforeport as t';
+		//$this->export_sql_end[$r]  .=' LEFT JOIN '.$this->db->prefix().'sysinfo_sysinforeport_line as tl ON tl.fk_sysinforeport = t.rowid';
 		$this->export_sql_end[$r] .=' WHERE 1 = 1';
-		$this->export_sql_end[$r] .=' AND t.entity IN ('.getEntity('myobject').')';
+		$this->export_sql_end[$r] .=' AND t.entity IN ('.getEntity('sysinforeport').')';
 		$r++; */
 		/* END MODULEBUILDER EXPORT MYOBJECT */
 
@@ -493,27 +580,27 @@ class modSysinfo extends DolibarrModules
 		/*
 		$langs->load("sysinfo@sysinfo");
 		$this->import_code[$r] = $this->rights_class.'_'.$r;
-		$this->import_label[$r] = 'MyObjectLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
+		$this->import_label[$r] = 'SysinfoReportLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
 		$this->import_icon[$r] = $this->picto;
-		$this->import_tables_array[$r] = array('t' => $this->db->prefix().'sysinfo_myobject', 'extra' => $this->db->prefix().'sysinfo_myobject_extrafields');
+		$this->import_tables_array[$r] = array('t' => $this->db->prefix().'sysinfo_sysinforeport', 'extra' => $this->db->prefix().'sysinfo_sysinforeport_extrafields');
 		$this->import_tables_creator_array[$r] = array('t' => 'fk_user_author'); // Fields to store import user id
 		$import_sample = array();
-		$keyforclass = 'MyObject'; $keyforclassfile='/sysinfo/class/myobject.class.php'; $keyforelement='myobject@sysinfo';
+		$keyforclass = 'SysinfoReport'; $keyforclassfile='/sysinfo/class/sysinforeport.class.php'; $keyforelement='sysinforeport@sysinfo';
 		include DOL_DOCUMENT_ROOT.'/core/commonfieldsinimport.inc.php';
 		$import_extrafield_sample = array();
-		$keyforselect='myobject'; $keyforaliasextra='extra'; $keyforelement='myobject@sysinfo';
+		$keyforselect='sysinforeport'; $keyforaliasextra='extra'; $keyforelement='sysinforeport@sysinfo';
 		include DOL_DOCUMENT_ROOT.'/core/extrafieldsinimport.inc.php';
-		$this->import_fieldshidden_array[$r] = array('extra.fk_object' => 'lastrowid-'.$this->db->prefix().'sysinfo_myobject');
+		$this->import_fieldshidden_array[$r] = array('extra.fk_object' => 'lastrowid-'.$this->db->prefix().'sysinfo_sysinforeport');
 		$this->import_regex_array[$r] = array();
 		$this->import_examplevalues_array[$r] = array_merge($import_sample, $import_extrafield_sample);
 		$this->import_updatekeys_array[$r] = array('t.ref' => 'Ref');
 		$this->import_convertvalue_array[$r] = array(
 			't.ref' => array(
 				'rule'=>'getrefifauto',
-				'class'=>(!getDolGlobalString('SYSINFO_MYOBJECT_ADDON') ? 'mod_myobject_standard' : getDolGlobalString('SYSINFO_MYOBJECT_ADDON')),
-				'path'=>"/core/modules/sysinfo/".(!getDolGlobalString('SYSINFO_MYOBJECT_ADDON') ? 'mod_myobject_standard' : getDolGlobalString('SYSINFO_MYOBJECT_ADDON')).'.php',
-				'classobject'=>'MyObject',
-				'pathobject'=>'/sysinfo/class/myobject.class.php',
+				'class'=>(!getDolGlobalString('SYSINFO_SYSINFOREPORT_ADDON') ? 'mod_sysinforeport_standard' : getDolGlobalString('SYSINFO_SYSINFOREPORT_ADDON')),
+				'path'=>"/core/modules/sysinfo/".(!getDolGlobalString('SYSINFO_SYSINFOREPORT_ADDON') ? 'mod_sysinforeport_standard' : getDolGlobalString('SYSINFO_SYSINFOREPORT_ADDON')).'.php',
+				'classobject'=>'SysinfoReport',
+				'pathobject'=>'/sysinfo/class/sysinforeport.class.php',
 			),
 			't.fk_soc' => array('rule' => 'fetchidfromref', 'file' => '/societe/class/societe.class.php', 'class' => 'Societe', 'method' => 'fetch', 'element' => 'ThirdParty'),
 			't.fk_user_valid' => array('rule' => 'fetchidfromref', 'file' => '/user/class/user.class.php', 'class' => 'User', 'method' => 'fetch', 'element' => 'user'),
@@ -561,13 +648,13 @@ class modSysinfo extends DolibarrModules
 		// Document templates
 		$moduledir = dol_sanitizeFileName('sysinfo');
 		$myTmpObjects = array();
-		$myTmpObjects['MyObject'] = array('includerefgeneration' => 0, 'includedocgeneration' => 0);
+		$myTmpObjects['SysinfoReport'] = array('includerefgeneration' => 0, 'includedocgeneration' => 0);
 
 		foreach ($myTmpObjects as $myTmpObjectKey => $myTmpObjectArray) {
 			if ($myTmpObjectArray['includerefgeneration']) {
-				$src = DOL_DOCUMENT_ROOT.'/install/doctemplates/'.$moduledir.'/template_myobjects.odt';
+				$src = DOL_DOCUMENT_ROOT.'/install/doctemplates/'.$moduledir.'/template_sysinforeports.odt';
 				$dirodt = DOL_DATA_ROOT.($conf->entity > 1 ? '/'.$conf->entity : '').'/doctemplates/'.$moduledir;
-				$dest = $dirodt.'/template_myobjects.odt';
+				$dest = $dirodt.'/template_sysinforeports.odt';
 
 				if (file_exists($src) && !file_exists($dest)) {
 					require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';

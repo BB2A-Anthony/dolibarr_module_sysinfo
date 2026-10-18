@@ -23,7 +23,7 @@
  */
 
 /**
- *	    \file       sysinfo/stats/myobject_index.php
+ *	    \file       sysinfostats/sysinforeport_index.php
  *      \ingroup    order
  *		\brief      Page with statistics
  */
@@ -37,8 +37,8 @@ if (!$res && !empty($_SERVER["CONTEXT_DOCUMENT_ROOT"])) {
 // Try main.inc.php into web root detected using web root calculated from SCRIPT_FILENAME
 $tmp = empty($_SERVER['SCRIPT_FILENAME']) ? '' : $_SERVER['SCRIPT_FILENAME'];
 $tmp2 = realpath(__FILE__);
-$i = strlen($tmp) - 1;  // @phan-suppress-current-line DolibarrForbiddenFunctionPlugin
-$j = strlen($tmp2) - 1;  // @phan-suppress-current-line DolibarrForbiddenFunctionPlugin
+$i = strlen($tmp) - 1;
+$j = strlen($tmp2) - 1;
 while ($i > 0 && $j > 0 && isset($tmp[$i]) && isset($tmp2[$j]) && $tmp[$i] == $tmp2[$j]) {
 	$i--;
 	$j--;
@@ -69,12 +69,11 @@ if (!$res) {
  * @var Translate $langs
  * @var User $user
  */
-require_once DOL_DOCUMENT_ROOT . '/core/lib/functions.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/categories/class/categorie.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/dolgraph.class.php';
-dol_include_once('/sysinfo/class/myobject.class.php');
-dol_include_once('/sysinfo/class/myobjectstats.class.php');
-dol_include_once('/sysinfo/lib/sysinfo_myobject.lib.php');
+dol_include_once('/sysinfo/class/sysinforeport.class.php');
+dol_include_once('/sysinfo/class/sysinforeportstats.class.php');
+dol_include_once('/sysinfo/lib/sysinfo_sysinforeport.lib.php');
 
 $WIDTH = DolGraph::getDefaultGraphSizeForStats('width');
 $HEIGHT = DolGraph::getDefaultGraphSizeForStats('height');
@@ -84,10 +83,10 @@ $mode = GETPOSTISSET("mode") ? GETPOST("mode", 'aZ09') : 'statistics';
 $userid = GETPOSTINT('userid');
 $categ_id = GETPOSTINT('categ_id');
 
-$hookmanager->initHooks(array('sysinfostats', 'myobjectstats', 'globalcard'));
+$hookmanager->initHooks(array('sysinfostats', 'sysinforeportstats', 'globalcard'));
 
-$objecttype = 'myobject';
-$object = new MyObject($db);
+$objecttype = 'sysinforeport';
+$object = new SysinfoReport($db);
 
 // List of object we want to manage statistics
 $usercanreadstatistic = 1;
@@ -139,13 +138,13 @@ llxHeader('', $title, '', '', 0, 0, '', '', '', 'mod-order page-stats');
 $permissiontoadd = 1;
 $param = '';
 $newcardbutton = '';
-$newcardbutton .= dolGetButtonTitle($langs->trans('ViewList'), '', 'fa fa-bars imgforviewmode', dol_buildpath('/sysinfo/myobject_list.php', 1).'?mode=common'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', ((empty($mode) || $mode == 'common') ? 2 : 1), array('morecss' => 'reposition'));
-$newcardbutton .= dolGetButtonTitle($langs->trans('ViewKanban'), '', 'fa fa-th-list imgforviewmode', dol_buildpath('/sysinfo/myobject_list.php', 1).'?mode=kanban'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', ($mode == 'kanban' ? 2 : 1), array('morecss' => 'reposition'));
+$newcardbutton .= dolGetButtonTitle($langs->trans('ViewList'), '', 'fa fa-bars imgforviewmode', dol_buildpath('/sysinfo/sysinforeport_list.php', 1).'?mode=common'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', ((empty($mode) || $mode == 'common') ? 2 : 1), array('morecss' => 'reposition'));
+$newcardbutton .= dolGetButtonTitle($langs->trans('ViewKanban'), '', 'fa fa-th-list imgforviewmode', dol_buildpath('/sysinfo/sysinforeport_list.php', 1).'?mode=kanban'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', ($mode == 'kanban' ? 2 : 1), array('morecss' => 'reposition'));
 //$newcardbutton .= dolGetButtonTitle($langs->trans('ViewKanbanGroupBy'), '', 'fa fa-grip-vertical imgforviewmode', dol_buildpath('/sysinfo/aaa_index.php', 1).'?mode=kanbangroupby&groupby=p.fk_opp_status'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', ($mode == 'kanbangroupby' ? 2 : 1), array('morecss' => 'reposition'));
 //$newcardbutton .= dolGetButtonTitle($langs->trans('HierarchicView'), '', 'fa fa-stream paddingleft imgforviewmode', dol_buildpath('/sysinfo/aaa_index.php', 1).'?mode=hierarchy'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', (($mode == 'hierarchy') ? 2 : 1), array('morecss' => 'reposition'));
-$newcardbutton .= dolGetButtonTitle($langs->trans('Statistics'), '', 'fa fa-chart-bar imgforviewmode', dol_buildpath('/sysinfo/stats/sysinfo_index.php', 1).'?mode=statistics&objecttype=myobject@sysinfo'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', ($mode == 'statistics' ? 2 : 1), array('morecss' => 'reposition'));
+$newcardbutton .= dolGetButtonTitle($langs->trans('Statistics'), '', 'fa fa-chart-bar imgforviewmode', dol_buildpath('/sysinfo/stats/sysinfo_index.php', 1).'?mode=statistics&objecttype=sysinforeport@sysinfo'.preg_replace('/(&|\?)*(mode|groupby)=[^&]+/', '', $param), '', ($mode == 'statistics' ? 2 : 1), array('morecss' => 'reposition'));
 $newcardbutton .= dolGetButtonTitleSeparator();
-$newcardbutton .= dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/sysinfo/myobject_card.php', 1).'?action=create&backtopage='.urlencode($_SERVER['PHP_SELF']), '', $permissiontoadd);
+$newcardbutton .= dolGetButtonTitle($langs->trans('New'), '', 'fa fa-plus-circle', dol_buildpath('/sysinfo/sysinforeport_card.php', 1).'?action=create&backtopage='.urlencode($_SERVER['PHP_SELF']), '', $permissiontoadd);
 
 $param = '';
 $page = 0;
@@ -163,14 +162,14 @@ print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sort
 
 dol_mkdir($dir);
 
-$stats = new MyObjectStats($db, $socid, $mode, ($userid > 0 ? $userid : 0), ($categ_id > 0 ? $categ_id : 0));
+$stats = new SysinfoReportStats($db, $socid, $mode, ($userid > 0 ? $userid : 0), ($categ_id > 0 ? $categ_id : 0));
 
 
 // Build graphic number of object
 $data = $stats->getNbByMonthWithPrevYear($endyear, $startyear);
 
 
-$filenamenb = $dir.'/myobjectnbinyear-'.$user->id.'-'.$year.'.png';
+$filenamenb = $dir.'/sysinforeportnbinyear-'.$user->id.'-'.$year.'.png';
 $fileurlnb = DOL_URL_ROOT.'/viewimage.php?modulepart=orderstats&file=ordersnbinyear-'.$user->id.'-'.$year.'.png';
 
 
@@ -327,7 +326,7 @@ $head[$h][1] = $langs->trans("ByMonthYear");
 $head[$h][2] = 'byyear';
 $h++;
 
-$type = 'myobject_stats';
+$type = 'sysinforeport_stats';
 
 complete_head_from_modules($conf, $langs, null, $head, $h, $type);
 

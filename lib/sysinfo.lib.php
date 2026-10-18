@@ -33,7 +33,7 @@ function sysinfoAdminPrepareHead()
 
 	// global $db;
 	// $extrafields = new ExtraFields($db);
-	// $extrafields->fetch_name_optionals_label('myobject');
+	// $extrafields->fetch_name_optionals_label('sysinforeport');
 
 	$langs->load("sysinfo@sysinfo");
 
@@ -46,22 +46,22 @@ function sysinfoAdminPrepareHead()
 	$h++;
 
 	/*
-	$head[$h][0] = dolBuildUrl(dol_buildpath("/sysinfo/admin/myobject_extrafields.php", 1));
+	$head[$h][0] = dolBuildUrl(dol_buildpath("/sysinfo/admin/sysinforeport_extrafields.php", 1));
 	$head[$h][1] = $langs->trans("ExtraFields");
-	$nbExtrafields = (isset($extrafields->attributes['myobject']['label']) && is_countable($extrafields->attributes['myobject']['label'])) ? count($extrafields->attributes['myobject']['label']) : 0;
+	$nbExtrafields = (isset($extrafields->attributes['sysinforeport']['label']) && is_countable($extrafields->attributes['sysinforeport']['label'])) ? count($extrafields->attributes['sysinforeport']['label']) : 0;
 	if ($nbExtrafields > 0) {
 		$head[$h][1] .= '<span class="badge marginleftonlyshort">' . $nbExtrafields . '</span>';
 	}
-	$head[$h][2] = 'myobject_extrafields';
+	$head[$h][2] = 'sysinforeport_extrafields';
 	$h++;
 
-	$head[$h][0] = dolBuildUrl(dol_buildpath("/sysinfo/admin/myobjectline_extrafields.php", 1));
+	$head[$h][0] = dolBuildUrl(dol_buildpath("/sysinfo/admin/sysinforeportline_extrafields.php", 1));
 	$head[$h][1] = $langs->trans("ExtraFieldsLines");
-	$nbExtrafields = (isset($extrafields->attributes['myobjectline']['label']) && is_countable($extrafields->attributes['myobjectline']['label'])) ? count($extrafields->attributes['myobject']['label']) : 0;
+	$nbExtrafields = (isset($extrafields->attributes['sysinforeportline']['label']) && is_countable($extrafields->attributes['sysinforeportline']['label'])) ? count($extrafields->attributes['sysinforeport']['label']) : 0;
 	if ($nbExtrafields > 0) {
 		$head[$h][1] .= '<span class="badge marginleftonlyshort">' . $nbExtrafields . '</span>';
 	}
-	$head[$h][2] = 'myobject_extrafieldsline';
+	$head[$h][2] = 'sysinforeport_extrafieldsline';
 	$h++;
 	*/
 
