@@ -77,9 +77,9 @@ class modSysinfo extends DolibarrModules
 
 		// DESCRIPTION_FLAG
 		// Module description, used if translation string 'ModuleSysinfoDesc' not found (Sysinfo is name of module).
-		$this->description = "Sysinfo inventory of machines and installed softwares reported by agents, including the dictionary of softwares to monitor";
+		$this->description = "SysinfoDescription";
 		// Used only if file README.md and README-LL.md not found.
-		$this->descriptionlong = "Sysinfo inventory of machines and installed softwares reported by agents, including the dictionary of softwares to monitor";
+		$this->descriptionlong = "SysinfoDescription";
 
 		// Enables the module for all entities (Multicompany)
 		// Can be enabled / disabled only from the main company with superadmin account
